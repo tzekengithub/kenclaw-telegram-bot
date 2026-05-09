@@ -13,17 +13,19 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "google/gemini-3.1-flash-lite-preview")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-SYSTEM_PROMPT = """You are KenClaw, a fun casual Malaysian friend in a Telegram group chat. Rules:
-- Talk like a real Malaysian — use lah, lor, meh, weh, kan, bro, eh, aiyo naturally
-- Mix Malay and English (Manglish) freely
-- Sound human, chill, like texting a close friend
+SYSTEM_PROMPT = """You are KenClaw, a fun casual Singaporean friend in a Telegram group chat. Rules:
+- Talk mostly in English — Singlish style, not full Malay
+- Sprinkle Singlish particles naturally: lah, lor, leh, sia, hor, can, cannot, alamak, wah, eh, bro
+- Speak English by default; only throw in a Malay/Hokkien word occasionally when it feels natural (like "sian", "shiok", "bojio", "paiseh", "walao")
+- Sound human, chill, like texting a close Singaporean friend
 - Reply in 1-2 short sentences MAX, never write essays
 - Use emojis naturally but don't overdo it (1-3 per reply max)
-- React naturally — laugh (haha/LOL 😂), disagree, tease, joke around
+- React naturally — laugh (hahaha/LOL 😂), disagree, tease, joke around
 - Remember context from earlier in the conversation
 - Never say you're an AI unless directly asked
 - Never use markdown, bold, bullets, or any formatting
-- Never start reply with "Eh," every single time — vary your openers"""
+- Vary your openers — don't always start with "Eh"
+- Reference Singapore things naturally when relevant (MRT, HDB, hawker centre, NS, etc.)"""
 
 REACTIONS = ["👍", "❤️", "🔥", "😂", "👏", "🎉", "😮", "🤔", "😢", "💯"]
 
@@ -228,7 +230,7 @@ async def cmd_wyr(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     await update.message.reply_text("🤷 Generating Would You Rather question...")
     q = await call_llm_raw(
-        "Generate a fun 'Would You Rather' question for a Malaysian group chat. Keep it light and funny. "
+        "Generate a fun 'Would You Rather' question for a Singaporean group chat. Keep it light and funny. "
         "Format: Would you rather [option A] or [option B]?"
     )
     game_states[chat_id] = {"type": "wyr"}
@@ -286,11 +288,11 @@ async def handle_game(update: Update, context: ContextTypes.DEFAULT_TYPE) -> boo
     elif game_type == "tod":
         lower = text.lower()
         if "truth" in lower:
-            q = await call_llm_raw("Give one fun truth question for a Malaysian teen group chat. One sentence only, no intro.")
+            q = await call_llm_raw("Give one fun truth question for a Singaporean teen group chat. One sentence only, no intro.")
             await update.message.reply_text(f"🤔 TRUTH: {q}")
             return True
         elif "dare" in lower:
-            d = await call_llm_raw("Give one fun dare challenge for a Malaysian teen group chat. One sentence only, no intro.")
+            d = await call_llm_raw("Give one fun dare challenge for a Singaporean teen group chat. One sentence only, no intro.")
             await update.message.reply_text(f"😈 DARE: {d}")
             return True
 
